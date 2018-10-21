@@ -22,7 +22,7 @@ public class BallsAndBuckets {
 				Random n = new Random();
 				if (n.nextInt(2) == 0) {
 					path[times] = "L";
-					if (end >= 2) {end = end - 1;} else {end = 1;}
+					end = end;
 				}
 				else {
 					path[times] = "R";

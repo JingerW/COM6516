@@ -1,0 +1,73 @@
+import java.util.Arrays;
+import java.util.Random;
+
+public class BallsAndBuckets {
+	
+	private Ball[] balls;
+	private int[] buckets;
+	
+	public BallsAndBuckets(int ball, int bucket) {
+		balls  = new Ball[ball];
+		buckets = new int[bucket];
+	}
+	
+	public Ball[] pathTaken() {
+		Arrays.fill(buckets, 0);
+		for (int i=0;i<balls.length;i++) {
+			int times = 0;
+			int end = 1;
+			String[] path = new String[buckets.length-1];
+			while (times < buckets.length-1) {
+				Random n = new Random();
+				if (n.nextInt(2) == 0) {
+					path[times] = "L";
+					if (end >= 2) {end = end - 1;} else {end = 1;}
+				}
+				else {
+					path[times] = "R";
+					if (end <= 4) {end = end + 1;} else {end = 5;}
+				}
+				times += 1;
+			}
+			//System.out.println(end);
+			//System.out.println(Arrays.toString(path));
+			balls[i] = new Ball(end, path);
+			buckets[end-1] += 1;
+		}
+		return balls;
+	}
+	
+	public int modal() {
+		int max = 0;
+		int maxb = 0;
+		for (int i=0;i<buckets.length-1;i++) {
+			if (buckets[i] > max) { 
+				max = buckets[i];;
+				maxb = i+1;
+				} 
+			else {
+				max = max;
+				maxb = maxb
+				}
+		}
+		return max;
+	}
+	
+	public static void main(String[] args) {
+		
+		BallsAndBuckets bb = new BallsAndBuckets(3,5);
+		
+		Ball[] ball = bb.pathTaken();
+		
+		for (int i=0;i<ball.length;i++) {
+			System.out.println(ball[i].getPaths());
+			System.out.println(ball[i].getEnds());
+		}
+		
+		System.out.println(bb.modal());
+		
+	}
+	
+}
+
+

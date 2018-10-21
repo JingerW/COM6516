@@ -1,0 +1,12 @@
+
+public class Student extends Person {
+	
+	private String course;
+	private String name;
+	private String dob;
+	
+	public Student() {
+		super(String name, String dob);
+	}
+	
+}

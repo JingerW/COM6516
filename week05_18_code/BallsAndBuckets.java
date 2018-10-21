@@ -26,7 +26,7 @@ public class BallsAndBuckets {
 				}
 				else {
 					path[times] = "R";
-					if (end <= 4) {end = end + 1;} else {end = 5;}
+					end += 1;
 				}
 				times += 1;
 			}

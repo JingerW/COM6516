@@ -19,7 +19,7 @@ public class MultiplicationTable {
 			
 			// first line plus the dash line
 			if (i ==0) {
-				System.out.println("  "+Arrays.toString(set[0]).replaceAll("[\\[|\\]|\\, ]", "  "));
+				System.out.println("   "+Arrays.toString(set[0]).replaceAll("[\\[|\\]|\\, ]", "  "));
 				for (int j=0;j<(set[0].length*5+4);j++) {System.out.print("-");}
 				System.out.println("");
 			}
@@ -29,7 +29,7 @@ public class MultiplicationTable {
 				System.out.print(i+" | ");
 				for (int l=0;l<9;l++) {
 					if (set[i-1][l] < 10) {
-						System.out.print(set[i-1][l]+"    ");
+						System.out.print(" "+set[i-1][l]+"   ");
 					}
 					else {
 						System.out.print(set[i-1][l]+"   ");

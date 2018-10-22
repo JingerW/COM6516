@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename type &apos;StatisticalDistribution&apos; to &apos;BallsAndBuckets&apos;&#x0D;&#x0A;- Original project: &apos;week05_18_code&apos;&#x0D;&#x0A;- Original element: &apos;StatisticalDistribution&apos;&#x0D;&#x0A;- Renamed element: &apos;BallsAndBuckets&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;StatisticalDistribution&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/&lt;{StatisticalDistribution.java[StatisticalDistribution" matchStrategy="1" name="BallsAndBuckets" qualified="false" references="true" similarDeclarations="false" stamp="1540138148227" textual="false" version="1.0"/>
-</session>

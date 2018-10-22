@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class BallsAndBuckets {
+public class BallsAndBuckets implements Cloneable{
 	
 	/*
 	 * private instances
@@ -20,8 +20,8 @@ public class BallsAndBuckets {
 	 * Constructor
 	 */
 	public BallsAndBuckets(int ball, int bucket) {
-		balls  = new Ball[ball];
-		buckets = new int[bucket];
+		this.balls  = new Ball[ball];
+		this.buckets = new int[bucket];
 	}
 	
 	/*
@@ -166,39 +166,37 @@ public class BallsAndBuckets {
 	/*
 	 * draw distribution diagram
 	 * @name distribution
-	 * @param int array buc bucket condition
 	 * @param BallsAndBuckets class object
 	 */
-	public void distribution(int[] bu, BallsAndBuckets bb) {
+	public void distribution(int[] bu) {
 
-		List<Integer> modal = bb.modal(bu);
-		// must sign bucket to a new int array else it will replace origin and cannot be displaced later
-		int[] bu2 = new int[bu.length-1];
+		List<Integer> modal = this.modal(bu);
 		
 		// while there are still different numbers in the bucket array, loop and draw
-		while (Arrays.stream(bu2).distinct().count() != 1) {
-			int m = buckets[modal.get(0)-1];
-			for (int i=1;i<=bu2.length;i++) {
-				if (modal.contains(i) && bu2[i-1] != 0) {		// check from the top
-					System.out.print("* ");						// draw * on this position
-					bu2[i-1] -= 1;								// minus one from bucket
+		while (Arrays.stream(bu).distinct().count() != 1) {
+			int m = bu[modal.get(0)-1];
+			for (int i=1;i<=bu.length;i++) {
+				if (modal.contains(i) && bu[i-1] != 0) {		// check from the top
+					System.out.print(" * ");						// draw * on this position
+					bu[i-1] -= 1;								// minus one from bucket
 				}
 				else if (m == 1) {								// if modal of this bucket is 1 means this is the bottom level
-					System.out.print("_ ");						// draw "_"
+					System.out.print(" _ ");						// draw "_"
 				}
 				else {
-					System.out.print("  ");
+					System.out.print("   ");
 				}
 			}
 			System.out.println("");
-			modal = bb.modal(bu2);								// recalculate modal for the next level
+			modal = this.modal(bu);								// recalculate modal for the next level
+			
 		}
 	}
 	
 	/*
 	 * main running function
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CloneNotSupportedException {
 		
 		// ask for number of balls and buckets
 		int numballs = BallsAndBuckets.ask("balls");
@@ -214,16 +212,17 @@ public class BallsAndBuckets {
 			System.out.println(ball[i].getPaths());
 		}
 		
+		// create a clone for bucket so that we can save it for later
+		int[] buc2 = (int[]) bb.getBuckets().clone();
+		
 		// draw distribution diagram
-		System.out.println("\nDistribution of balls: ");
-		int[] buc = bb.getBuckets();
-		List<Integer> modal = bb.modal(buc);
-		System.out.println(Arrays.toString(buc));
-		bb.distribution(bb.getBuckets(), bb);
+		System.out.println("\nDistribution of balls: \n");
+		bb.distribution(bb.getBuckets());
+		System.out.println(Arrays.toString(buc2));
 		
 		// get modal and mean bucket
-		System.out.println("\nThe modal bucket is: "+modal);
-		System.out.println("The mean bucket is: "+bb.mean(buc));
+		System.out.println("\nThe modal bucket is: "+bb.modal(buc2));
+		System.out.println("The mean bucket is: "+bb.mean(buc2));
 
 		
 		

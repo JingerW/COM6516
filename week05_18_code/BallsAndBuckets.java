@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+/*
+ * Test example
+ * @Author: Jingjing Wang
+ */
 public class BallsAndBuckets implements Cloneable{
 	
 	/*
@@ -135,6 +139,7 @@ public class BallsAndBuckets implements Cloneable{
 	/*
 	 * interface for user to input
 	 * will not allow any type except for integer and also forbid negative number
+	 * make it static so we can question the user before create the class
 	 * @name ask
 	 * @param string b ball or bucket
 	 */

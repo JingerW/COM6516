@@ -125,7 +125,7 @@ public class BallsAndBuckets implements Cloneable{
 		// the sum of the number of balls in each bucket multiplied by the bucket number
 		// divided by the total number of balls
 		for (int i=0;i<bu.length;i++) {
-			total += (bu[i]*i);
+			total += (bu[i]*(i+1));
 			totalb += bu[i];
 		}
 		System.out.println("total: "+total);

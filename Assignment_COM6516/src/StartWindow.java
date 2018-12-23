@@ -6,7 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,12 +28,13 @@ public class StartWindow extends JFrame implements ActionListener{
 	private JButton exit, search;
 	private String[] year, month, day;
 	private JPanel ticker, startDate, endDate, action;
+	private ArrayList<MarketData> MD = new ArrayList<>();
 	private String[] tickers = { "AAPL", "GOOG", "LIVE"};
 	private List<String> month30 = Arrays.asList("4","6","9","11");
 	private List<String> month31 = Arrays.asList("1","3","5","7","8","10","12");
 	private JComboBox tickerList, startYearList, startMonthList, startDayList, endYearList, endMonthList, endDayList;
 	private String testInput = "https://quotes.wsj.com/AAPL/historical-prices/download?MOD_VIEW=page&num_rows=300&startDate=1/1/2018&endDate=12/31/2018";
-
+	
 	public StartWindow() {
 
 		// set size, position, icon, and title for the JFrame
@@ -74,9 +79,6 @@ public class StartWindow extends JFrame implements ActionListener{
 		search = make.makeJButton(action, "search", this);
 		exit = make.makeJButton(action, "exit", this);
 		contentPane.add(action);
-		
-//		this.pack();
-
 	}
 	
 	
@@ -103,6 +105,32 @@ public class StartWindow extends JFrame implements ActionListener{
 				listDay.removeItemAt(listDay.getItemCount()-1);
 			}
 		}
+	}
+	
+	/*
+	 * Name: isInteger/isDouble
+	 * Desc: check if the input string can be parsed into int/double
+	 * @param s String to be checked
+	 */
+	public static boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    } catch(NullPointerException e) {
+	        return false;
+	    }
+	    return true;
+	}
+	public static boolean isDouble(String s) {
+	    try { 
+	        Double.parseDouble(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    } catch(NullPointerException e) {
+	        return false;
+	    }
+	    return true;
 	}
 	
 
@@ -140,9 +168,34 @@ public class StartWindow extends JFrame implements ActionListener{
 			try {	
 				   URL url = new URL(testInput);
 				   Scanner s = new Scanner(url.openStream());
-				   s.useDelimiter(",");
+				   s.useDelimiter(",|/|\\n");
+				   
+				   boolean stop = true;
+				   
+				   while (stop) {
+					   String s1 = s.next();
+					   if (isInteger(s1)) {
+						   int month = Integer.parseInt(s1);
+						   int day = Integer.parseInt(s.next());
+						   int year = Integer.parseInt(s.next());
+						   Double open = Double.parseDouble(s.next());
+						   Double high = Double.parseDouble(s.next());
+						   Double low = Double.parseDouble(s.next());
+						   Double close = Double.parseDouble(s.next());
+						   Double volumn = Double.parseDouble(s.next());
+						   MarketData dataForOneDay = new MarketData(month,day,year,open,high,low,close,volumn);
+						   MD.add(dataForOneDay);
+						   System.out.println(month+","+day+","+year+","+open+","+high+","+low+","+close+","+volumn);
+					   }
+					   else {continue;}
+					   System.out.println();
+					   if (!s.hasNext()) {
+						   stop = false;
+					   }
+					   else {continue;}
+
+				   }
 					
-				   System.out.println("nice");
 				}
 				catch(IOException ex) {
 					System.out.println("there must be something wrong");
@@ -150,7 +203,7 @@ public class StartWindow extends JFrame implements ActionListener{
 				}
 			
 			System.out.println(input);
-			JFrame result = new ResultWindow();
+			JFrame result = new ResultWindow(MD);
 			result.setVisible(true);
 		}
 	}

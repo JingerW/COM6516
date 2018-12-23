@@ -42,7 +42,7 @@ public class StartWindow extends JFrame implements ActionListener{
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension dim = tk.getScreenSize();
 		setSize(WIDTH,HEIGHT);
-		setLocation(new Point(dim.width/4, dim.height/4));
+		setLocation(new Point(dim.width/10, dim.height/10));
 		Container contentPane = this.getContentPane();
 		this.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 		make = new Components();
@@ -202,7 +202,7 @@ public class StartWindow extends JFrame implements ActionListener{
 					ex.printStackTrace();
 				}
 			
-			System.out.println(input);
+//			System.out.println(input);
 			JFrame result = new ResultWindow(MD);
 			result.setVisible(true);
 		}

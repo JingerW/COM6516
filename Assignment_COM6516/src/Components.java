@@ -1,7 +1,9 @@
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.util.stream.IntStream;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -44,6 +46,24 @@ public class Components {
 		b.addActionListener(e);
 		p.add(b);
 		return b;
+	}
+	
+	/*
+	 * Name: makeJCheckBox
+	 * Desc: make a check box component and add to the panel, return this check box.
+	 * @param p JPanel
+	 * @param l String label for this check box
+	 * @param e ItemListener
+	 * @param state selected state at the beginning
+	 */
+	public JCheckBox makeJCheckBox(JPanel p, String l, ItemListener ie, boolean state) {
+		JCheckBox c = new JCheckBox(l);
+		if (state == true) {
+			c.setSelected(true);
+		}
+		c.addItemListener(ie);
+		p.add(c);
+		return c;
 	}
 		
 	

@@ -23,7 +23,7 @@ import javax.swing.JPanel;
  * Desc: Main frame for selecting ticker and time.
  * Author: Jingjing Wang
  */
-@SuppressWarnings("serial")
+
 public class StartWindow extends JFrame implements ActionListener{
 	
 	/*
@@ -179,7 +179,7 @@ public class StartWindow extends JFrame implements ActionListener{
 			
 			try {	
 				   // get csv from the string
-				   URL url = new URL(testInput);
+				   URL url = new URL(input);
 				   Scanner s = new Scanner(url.openStream());
 				   s.useDelimiter(",|/|\\n");
 				   

@@ -6,11 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,8 +18,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/*
+ * Class: StartWindow
+ * Desc: Main frame for selecting ticker and time.
+ * Author: Jingjing Wang
+ */
+@SuppressWarnings("serial")
 public class StartWindow extends JFrame implements ActionListener{
 	
+	/*
+	 * All declarations
+	 */
 	public final static int WIDTH = 400, HEIGHT = 400;
 	private Components make;
 	private JButton exit, search;
@@ -32,9 +38,14 @@ public class StartWindow extends JFrame implements ActionListener{
 	private String[] tickers = { "AAPL", "GOOG", "LIVE"};
 	private List<String> month30 = Arrays.asList("4","6","9","11");
 	private List<String> month31 = Arrays.asList("1","3","5","7","8","10","12");
+	@SuppressWarnings("rawtypes")
 	private JComboBox tickerList, startYearList, startMonthList, startDayList, endYearList, endMonthList, endDayList;
 	private String testInput = "https://quotes.wsj.com/AAPL/historical-prices/download?MOD_VIEW=page&num_rows=300&startDate=1/1/2018&endDate=12/31/2018";
 	
+	/*
+	 * Initiation
+	 * create 4 panels in the main frame: ticker panel, startdate panel, enddate panel and action panel
+	 */
 	public StartWindow() {
 
 		// set size, position, icon, and title for the JFrame
@@ -57,6 +68,7 @@ public class StartWindow extends JFrame implements ActionListener{
 		tickerList = make.makeComboBox(ticker, tickers, "Please select ticker: " , this);
 		contentPane.add(ticker);
 		
+		// start date panel
 		startDate = new JPanel();
 		JLabel labelStart = new JLabel("Please select start date: ");
 		labelStart.setAlignmentX(CENTER_ALIGNMENT);
@@ -66,6 +78,7 @@ public class StartWindow extends JFrame implements ActionListener{
 		contentPane.add(labelStart);
 		contentPane.add(startDate);
 		
+		// end date panel
 		endDate = new JPanel();
 		JLabel labelEnd = new JLabel("Please select end date: ");
 		labelEnd.setAlignmentX(CENTER_ALIGNMENT);
@@ -75,6 +88,7 @@ public class StartWindow extends JFrame implements ActionListener{
 		contentPane.add(labelEnd);
 		contentPane.add(endDate);
 		
+		// search or exit panel
 		action = new JPanel();
 		search = make.makeJButton(action, "search", this);
 		exit = make.makeJButton(action, "exit", this);
@@ -133,7 +147,6 @@ public class StartWindow extends JFrame implements ActionListener{
 	    return true;
 	}
 	
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String input = "";
@@ -142,17 +155,16 @@ public class StartWindow extends JFrame implements ActionListener{
 		if (source == exit) {
 			System.exit(0);
 		}
-		
+		// change day option depends on which month user has selected
 		else if (source == startMonthList) {
 			String s = (String) startMonthList.getSelectedItem();
 			dayOfMonth(s, startDayList);
 		}
-		
 		else if (source == endMonthList) {
 			String s = (String) endMonthList.getSelectedItem();
 			dayOfMonth(s, endDayList);
 		}
-		
+		// create searching string for the result window
 		else if (source == search) {
 			String t = (String) tickerList.getSelectedItem();
 			String startY = (String) startYearList.getSelectedItem();
@@ -166,6 +178,7 @@ public class StartWindow extends JFrame implements ActionListener{
 					startM+"/"+startD+"/"+startY+"&endDate="+endM+"/"+endD+"/"+endY;
 			
 			try {	
+				   // get csv from the string
 				   URL url = new URL(testInput);
 				   Scanner s = new Scanner(url.openStream());
 				   s.useDelimiter(",|/|\\n");
@@ -174,6 +187,7 @@ public class StartWindow extends JFrame implements ActionListener{
 				   
 				   while (stop) {
 					   String s1 = s.next();
+					   // as soon as it reads an integer, it starts recording and create a new MarketData class and add it to the list
 					   if (isInteger(s1)) {
 						   int month = Integer.parseInt(s1);
 						   int day = Integer.parseInt(s.next());
@@ -185,10 +199,9 @@ public class StartWindow extends JFrame implements ActionListener{
 						   Double volumn = Double.parseDouble(s.next());
 						   MarketData dataForOneDay = new MarketData(month,day,year,open,high,low,close,volumn);
 						   MD.add(dataForOneDay);
-						   System.out.println(month+","+day+","+year+","+open+","+high+","+low+","+close+","+volumn);
+//						   System.out.println(month+","+day+","+year+","+open+","+high+","+low+","+close+","+volumn);
 					   }
 					   else {continue;}
-					   System.out.println();
 					   if (!s.hasNext()) {
 						   stop = false;
 					   }
@@ -202,7 +215,7 @@ public class StartWindow extends JFrame implements ActionListener{
 					ex.printStackTrace();
 				}
 			
-//			System.out.println(input);
+			// give result window the sorted ArrayList of MarketData
 			JFrame result = new ResultWindow(MD);
 			result.setVisible(true);
 		}

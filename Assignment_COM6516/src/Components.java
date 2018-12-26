@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.stream.IntStream;
@@ -56,8 +57,9 @@ public class Components {
 	 * @param e ItemListener
 	 * @param state selected state at the beginning
 	 */
-	public JCheckBox makeJCheckBox(JPanel p, String l, ItemListener ie, boolean state) {
+	public JCheckBox makeJCheckBox(JPanel p, String l, ItemListener ie, boolean state, Color color) {
 		JCheckBox c = new JCheckBox(l);
+		c.setForeground(color);
 		if (state == true) {
 			c.setSelected(true);
 		}

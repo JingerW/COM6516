@@ -21,15 +21,37 @@ public class MarketData {
 
 	/*
 	 * All getter and Setter
-	 */
+	 */	
 	public String getDate() {
-		return month+"/"+day+"/"+year;
+		return month+"/"+year;
+	}
+	
+	public int getMonth() {
+		return month;
 	}
 
 	public void setDate(int month, int day, int year) {
 		this.month = month;
 		this.day = day;
 		this.year = year;
+	}
+	
+	public double getData(String dataname) {
+		if (dataname == "OPEN") {
+			return open;
+		}
+		else if (dataname == "HIGH") {
+			return high;
+		}
+		else if (dataname == "LOW") {
+			return low;
+		}
+		else if (dataname == "CLOSE") {
+			return close;
+		}
+		else {
+			return volumn/1e6;
+		}
 	}
 
 	public double getHigh() {

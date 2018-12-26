@@ -1,8 +1,0 @@
-import sheffield.*;
-
-public class Practice1 {	
-	public static void main( String[] arg){
-		EasyReader file = new EsyReader ("timings.txt");
-		
-		System.out.println(file);
-	}

@@ -30,7 +30,7 @@ public class Graphs extends JPanel{
 	private ArrayList<MarketData> MD;
 	private ArrayList<Line2D> lines;
 	private ArrayList<Ellipse2D> dotes;
-	private double unitDataX, unitDataY, max, min;
+	private double unitDataX, unitDataY, max, min, maxV, minV, unitDataYV;
 	private int panelH, panelW, originX, originY, unitYaxis;
 	private Color color1 = new Color(255,0,0,255);
 	private Color color2 = new Color(255,255,0,0);
@@ -56,8 +56,15 @@ public class Graphs extends JPanel{
 		panelH = c.getPreferredSize().height;
 		panelW = c.getPreferredSize().width;
 		originX = panelW-(BORDER_WIDTH*2+padding);
-		originY = panelH-(BORDER_WIDTH*2+padding*2);
+		originY = panelH-(BORDER_WIDTH*2+padding);
 		
+		// get units for each data
+		// get maximum and minimum value of the data and stretch the graph based on these two values
+		unitDataX = (originX - padding)/(double)(MD.size());
+		max = getMaxOrMin(MD, "HIGH", 0);
+		min = getMaxOrMin(MD, "LOW", 1);
+		unitDataY = (originY - padding)/(max-min);
+
 		setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH), new EtchedBorder()));
 		setLayout(null);
 		setBackground(Color.WHITE);
@@ -139,6 +146,21 @@ public class Graphs extends JPanel{
 	 */
 	public void getVolumn(boolean v) {
 		this.volumn = v;
+		
+		// reset maximum and minimum if volumn is selected
+		if (v == true) {
+			// maximum and minimum value for volumn 
+			max = getMaxOrMin(MD, "VOLUMN", 0);
+			min = getMaxOrMin(MD, "VOLUMN", 1);
+			unitDataY = (originY - padding)/(max-min);
+		}
+		else {
+			max = getMaxOrMin(MD, "HIGH", 0);
+			min = getMaxOrMin(MD, "LOW", 1);
+			unitDataY = (originY - padding)/(max-min);
+		}
+		
+		
 	}
 	
 	/*
@@ -174,18 +196,44 @@ public class Graphs extends JPanel{
 	public void drawXLables(Graphics2D g2) {
 		int month = 0;
 		g2.setStroke(dashed);
-		g2.setColor(new Color(187, 190, 193));
 		
 		// y axis labels
 		unitYaxis = (originY - padding)/10;
 		for (int i=0;i<10;i++) {
+			g2.setColor(new Color(187, 190, 193));
 			g2.drawLine(padding, padding + (unitYaxis*i), originX, padding + (unitYaxis*i));
-			
-			JLabel labelY = new JLabel(String.valueOf(Math.round(min+(unitYaxis*(9-i)))));
-			labelY.setSize(30, 10);
-			labelY.setLocation(padding-30, padding + (unitYaxis*i));
-			this.add(labelY);
 		}
+		if (volumn == false) {
+			for (int i=0;i<11;i++) {
+				g2.setColor(Color.BLACK);
+				if (i==0) {
+					g2.drawString(String.valueOf(Math.round(max)), padding-30, padding + (unitYaxis*i));
+				}
+				if (i==10) {
+					g2.drawString(String.valueOf(Math.round(min)), padding-30, padding + (unitYaxis*(i+1)));
+				}
+				else {
+					g2.drawString(String.valueOf(Math.round(max-(((max-min)/10)*i))), padding-30, padding + (unitYaxis*i));
+				}
+			}
+		}
+		else {
+			for (int i=0;i<11;i++) {
+				g2.setColor(Color.BLACK);
+				if (i==0) {
+					g2.drawString(String.valueOf(Math.round(max*1e6)), padding-30, padding + (unitYaxis*i));
+				}
+				if (i==10) {
+					g2.drawString(String.valueOf(Math.round(min*1e6)), padding-30, padding + (unitYaxis*(i+1)));
+				}
+				else {
+					g2.drawString(String.valueOf(Math.round((max-(((max-min)/10)*i))*1e6)), padding-30, padding + (unitYaxis*i));
+				}
+			}
+		}
+
+		
+		
 		
 		
 		// x axis labels
@@ -223,26 +271,18 @@ public class Graphs extends JPanel{
 		dotes = new ArrayList<>();
 		lines = new ArrayList<>();
 		
-		// get units for each specific data
-		// get maximum and minimum value of the data and stretch the graph based on these two values
-		unitDataX = (originX - padding)/(double)(MD.size());
-		max = getMaxOrMin(MD, dataname, 0)+20;
-		min = getMaxOrMin(MD, dataname, 1)-20;
-		unitDataY = (originY - padding)/(max-min);
-		System.out.println(getMaxOrMin(MD, dataname, 0));
-		System.out.println(getMaxOrMin(MD, dataname, 1));
-		
-		// draw values
+		// store each dotes into arraylist for drawing later
 		for (int i=0;i<MD.size();i++) {
-			// draw each dote
-			dotes.add(new Ellipse2D.Double(padding+(i*unitDataX), originX-((MD.get(MD.size()-1-i).getData(dataname)-min)*unitDataY), 1, 1));
-//			g2.draw(new Ellipse2D.Double(padding+(i*unitDataX), originX-((MD.get(MD.size()-1-i).getData(dataname)-min)*unitDataY), 1, 1));
+			// dotes
+			dotes.add(new Ellipse2D.Double(padding+(i*unitDataX), originY-((MD.get(MD.size()-1-i).getData(dataname)-min)*unitDataY), 1, 1));
+//			System.out.println(dataname+" point: "+MD.get(MD.size()-1-i).getData(dataname));
 			if ((i+1)<MD.size()) {
-				// draw lines between dotes
-				lines.add(new Line2D.Double(padding+(i*unitDataX), originX-((MD.get(MD.size()-1-i).getData(dataname)-min)*unitDataY), padding+((i+1)*unitDataX), originX-((MD.get(MD.size()-2-i).getData(dataname)-min)*unitDataY)));
-//				g2.draw(new Line2D.Double(padding+(i*unitDataX), originX-((MD.get(MD.size()-1-i).getData(dataname)-min)*unitDataY), padding+((i+1)*unitDataX), originX-((MD.get(MD.size()-2-i).getData(dataname)-min)*unitDataY)));
+				// lines
+				lines.add(new Line2D.Double(padding+(i*unitDataX), originY-((MD.get(MD.size()-1-i).getData(dataname)-min)*unitDataY), padding+((i+1)*unitDataX), originY-((MD.get(MD.size()-2-i).getData(dataname)-min)*unitDataY)));
 			}
 		}
+		
+		
 		
 	}
 	
@@ -273,7 +313,7 @@ public class Graphs extends JPanel{
 		}
 		else if (name == "CLOSE") {
 			for (int i=0;i<MD.size();i++) {
-				list.add(MD.get(i).getLow());
+				list.add(MD.get(i).getClose());
 			}
 		}
 		else {
